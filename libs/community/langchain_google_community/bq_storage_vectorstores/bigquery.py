@@ -506,7 +506,7 @@ class BigQueryVectorStore(BaseBigQueryVectorStore):
             )
 
         if queries is not None:
-            embeddings = [self.embedding.embed_query(query) for query in queries]
+            embeddings = [self._embed_query(query) for query in queries]
 
         if embeddings is None:
             raise ValueError("Could not obtain embeddings - value is None.")
@@ -675,7 +675,7 @@ class BigQueryVectorStore(BaseBigQueryVectorStore):
         Returns:
             Return docs most similar to input query.
         """
-        embedding = self.embedding.embed_query(query)
+        embedding = self._embed_query(query)
         return self.similarity_search_by_vectors(embeddings=[embedding], k=k, **kwargs)[
             0
         ]
@@ -707,7 +707,7 @@ class BigQueryVectorStore(BaseBigQueryVectorStore):
         Returns:
             Return docs most similar to input query along with scores.
         """
-        embedding = self.embedding.embed_query(query)
+        embedding = self._embed_query(query)
         return self.similarity_search_by_vector_with_score(
             embedding=embedding, filter=filter, k=k, **kwargs
         )

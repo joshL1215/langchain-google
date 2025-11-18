@@ -488,7 +488,7 @@ class BaseBigQueryVectorStore(VectorStore, BaseModel, ABC):
         Returns:
             Return docs most similar to input query.
         """
-        embedding = self.embedding.embed_query(query)
+        embedding = self._embed_query(query)
         return self.similarity_search_by_vectors(embeddings=[embedding], k=k, **kwargs)[
             0
         ]
@@ -513,7 +513,7 @@ class BaseBigQueryVectorStore(VectorStore, BaseModel, ABC):
         Returns:
             Return docs most similar to input query along with scores.
         """
-        embedding = self.embedding.embed_query(query)
+        embedding = self._embed_query(query)
         return self.similarity_search_by_vector_with_score(
             embedding=embedding, filter=filter, k=k
         )
@@ -561,7 +561,7 @@ class BaseBigQueryVectorStore(VectorStore, BaseModel, ABC):
         Returns:
             List of documents selected by maximal marginal relevance.
         """
-        embedding = self.embedding.embed_query(query)
+        embedding = self._embed_query(query)
         return self.max_marginal_relevance_search_by_vector(
             embedding=embedding, k=k, fetch_k=fetch_k, lambda_mult=lambda_mult, **kwargs
         )
