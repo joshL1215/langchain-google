@@ -365,7 +365,25 @@ class BaseBigQueryVectorStore(VectorStore, BaseModel, ABC):
         return await asyncio.get_running_loop().run_in_executor(
             None, partial(self.delete, **kwargs), ids
         )
+    
+    def _embed_query(self, query: str) -> List[float]:
+        """Helper to embed query while passing config
 
+        Args:
+            query: String to embed.
+        
+        Returns:
+            Embedding of the query with specific dimensionality
+        """
+        # Prefer getting dimension configuration when present
+        if self.embedding_dimension is not None: 
+            try:
+                return self.embedding.embed_query(query, output_dimensionality=self.embedding_dimension)
+            except TypeError:
+                return self.embedding.embed_query(query)
+        # Default to inferring dimensionality
+        return self.embedding.embed_query(query)
+    
     def similarity_search_by_vectors(
         self,
         embeddings: List[List[float]],
